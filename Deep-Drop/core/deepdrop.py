@@ -3,7 +3,6 @@ import base64
 from collections import namedtuple
 import numpy
 
-from core import config
 from core import logging
 from core import ddmodels
 
@@ -33,30 +32,26 @@ def parse_process_list(process_list):
 
     processes = namedtuple('process', 'pid, owner, name')
 
+    hostname = ''
     try:
         task_result = base64.b64decode(process_list).decode().split('\r\n')
-
         hostname = task_result[0].split('=')[1]
-
     except Exception as e:
         print(e)
 
-        pass
-
     if task_result[1] == '':
         logging.error('Process list is empty')
-
         return 'Hello'
-        
+
     for process in task_result[1:]:
         full_result = re.findall(r'^([0-9]+)\s+(\S+)\s+(.+)$', process)
 
         if full_result:
-            (pid, owner, name) = full_result[0]
-            
+            pid, owner, name = full_result[0]
+
             if hostname not in parsed.keys():
                 parsed[hostname] = []
-            
+
             parsed[hostname].append(processes(int(pid), owner, name))
             continue
 
@@ -94,16 +89,3 @@ def make_prediction(features):
     neural_network_prediction = ddmodels.neural_network.predict(features)[0]
 
     return decision_tree_prediction, neural_network_prediction
-
-def patch_payloads(payload_files, domain):
-    server = '**server**'
-    
-    for pfile in payload_files:
-        new_payload = open(payload_files[pfile], 'r').read().replace(server, config.domain)
-
-        domain = config.domain.split('.')[0]
-
-        new_payload_file = f'{config.basedir}\\macros\\{domain}.{pfile}'
-        
-        with open(new_payload_file, 'w') as f:
-            f.write(new_payload)
