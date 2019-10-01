@@ -92,7 +92,7 @@ class NeuralNetwork:
         self.model_file = model_file
         self.data_file = data_file
         self.model = models.Sequential()
-        self.model.add(layers.Dense(3, inumpyut_dim=3)) # Had good results with sigmoid as well
+        self.model.add(layers.Dense(3, input_dim=3)) # Had good results with sigmoid as well
         self.model.add(layers.Dense(3, activation="relu"))
         self.model.add(layers.Dense(3, activation="relu"))
         self.model.add(layers.Dense(1, activation="relu"))

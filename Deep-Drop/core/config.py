@@ -8,7 +8,7 @@ basedir = os.path.dirname(os.path.abspath(__file__))
 
 # payloads
 payload_files = {
-    'vba': os.path.join(basedir, 'macros\\basic.vba')
+    'vbs': os.path.join(basedir, 'templates\\template.vbs')
 }
 
 # data

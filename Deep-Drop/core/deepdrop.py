@@ -11,6 +11,8 @@ def process_callback(callback):
     # Parse the process list
     parsed_process_list = parse_process_list(callback)
 
+    if not parse_process_list:
+        return 'Error'
     # Extract features
     collected_features = gather_features(parsed_process_list)
 
@@ -41,7 +43,7 @@ def parse_process_list(process_list):
     except Exception as e:
         print(e)
 
-        pass
+        return False
 
     if task_result[1] == '':
         logging.error('Process list is empty')
