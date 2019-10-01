@@ -101,9 +101,7 @@ def patch_payloads(payload_files, domain):
     for pfile in payload_files:
         new_payload = open(payload_files[pfile], 'r').read().replace(server, config.domain)
 
-        domain = config.domain.split('.')[0]
-
-        new_payload_file = f'{config.basedir}\\macros\\{domain}.{pfile}'
+        new_payload_file = f'{config.basedir}\\macros\\{config.domain}.{pfile}'
         
         with open(new_payload_file, 'w') as f:
             f.write(new_payload)
