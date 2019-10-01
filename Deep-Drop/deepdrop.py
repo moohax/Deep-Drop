@@ -1,4 +1,3 @@
-import sys
 import argparse
 
 from flask import Flask
@@ -6,7 +5,7 @@ from core import config
 from core import routing
 from core import logging
 from core import ddmodels
-from core import deepdrop
+from core import payloads
 
 if __name__ == '__main__':
 
@@ -31,7 +30,7 @@ if __name__ == '__main__':
 
         logging.success('Routes loaded')
 
-        deepdrop.patch_payloads(config.payload_files, config.domain)
+        payloads.patch_payloads(config.payload_files, config.domain)
 
         logging.success(f'Payloads patched. Callback info {config.domain}')
 
