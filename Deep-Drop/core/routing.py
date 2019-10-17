@@ -2,8 +2,8 @@ from flask import request
 from flask import redirect
 from flask import url_for
 from flask import Response
+from core import logging
 from core.deepdrop import process_callback, create_payload, keycodes
-from core import  
 
 def setup_routes(app):
     @app.route('/', methods=['GET'])
