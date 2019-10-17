@@ -3,12 +3,11 @@ import numpy
 import pickle
 
 from core import config
-from core import logging
 
 # Neural Network Imports
-from keras import models
-from keras import layers
-from keras.models import load_model
+from tensorflow.keras import models
+from tensorflow.keras import layers
+from tensorflow.keras.models import load_model
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 # Decision Tree Imports
@@ -26,20 +25,13 @@ neural_network = None
 # Gets called at start up
 def load_models():
     global decision_tree
-
     global neural_network
 
     decision_tree = DecisionTree(model_file=config.trained_models['decisiontree'], data_file=config.data_files['decisiontree'])
-
     decision_tree.load()
 
-    logging.success('DecisionTree loaded')
-
     neural_network = NeuralNetwork(model_file=config.trained_models['neuralnetwork'], data_file=config.data_files['neuralnetwork'])
-
     neural_network.load()
-
-    logging.success('Neural Network loaded')
 
 class DecisionTree(object): 
     def __init__(self, training_mode=False, data_file=None,  model_file=None):
@@ -82,7 +74,6 @@ class DecisionTree(object):
         dot_data = export_graphviz(self.classifier, filled=True, rounded=True, special_characters=True, class_names=True)
         graph = pydotplus.graph_from_dot_data(dot_data)
         graph.write_png(filename)
-
 
 class NeuralNetwork:
     def __init__(self, training_mode=False, data_file=None, model_file=None, epochs=300, batch=250):
