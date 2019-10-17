@@ -42,14 +42,11 @@ core
 [-] Routes loaded
 [-] Payloads patched for localhost
 
+[DBG] ece9d57d-ef30-47ed-accb-46ea3c436257
+
  * Serving Flask app "deepdrop" (lazy loading)
- * Environment: production
-   WARNING: Do not use the development server in a production environment.
-   Use a production WSGI server instead.
- * Debug mode: off
- * Running on http://0.0.0.0:80/ (Press CTRL+C to quit)
+  ...
 ```
 
 ### Testing
-Passing `-d\--debug` to 
-Copy the `localhost.vba` into a word doc
+Passing `-d\--debug` to deepdrop will give back a key that can be used to bypass the sandbox check for testing payloads

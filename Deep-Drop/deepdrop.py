@@ -34,9 +34,10 @@ def main(args):
             app.config['CAPTAINS_KEY'] = captains_key
             app.debug = True
 
+            logging.debug(captains_key)
+
         # Setup our routes
         routing.setup_routes(app)
-        logging.warn('Routes loaded')
 
     except Exception as e:
         logging.error(str(e))
