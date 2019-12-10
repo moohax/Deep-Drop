@@ -40,13 +40,16 @@ class NeuralNetwork(object):
         self.clf = load_model(self.model_file)
         self.scaler = load(scaler_file)
         
-    def predict(self, features, verbose=True):
-        # test = numpy.array([[131, 65.5, 2]])
-        # test1 = numpy.array([[36, 18.0, 2]])
-
+    def predict(self, features, prediction='class', verbose=True):
         features = features.astype(numpy.float64) 
         min_max_data = self.scaler.transform(features)
 
         if verbose:
             print(f'Predicted Class: {self.clf.predict_classes(min_max_data)[0][0]}')
             print(f'Class Probability: {self.clf.predict(min_max_data)[0][0]}')
+
+        if prediction == 'class':
+            return self.clf.predict_classes(min_max_data)[0][0]
+
+        else: 
+            return self.clf.predict(min_max_data)[0][0]

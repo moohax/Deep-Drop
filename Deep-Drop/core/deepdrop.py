@@ -22,8 +22,8 @@ def process_callback(callback):
     # Make a prediction
     decision_tree_prediction, neural_network_prediction = make_prediction(collected_features)
 
-    # Make the drop decision set neural_network_prediction  confidence based on risk tolerance
-    if decision_tree_prediction < 1 or neural_network_prediction < 0.60:
+    # Make the drop decision
+    if decision_tree_prediction < 1 or neural_network_prediction != 1:
         logging.success(f'Dropping payload.\n [-] Decision Tree:{decision_tree_prediction}\n [-] Neural Network:{neural_network_prediction}')
 
         keycode = str(uuid.uuid4())
@@ -92,7 +92,7 @@ def gather_features(parsed_process_list):
 def make_prediction(features):
     features = numpy.array(features)
     decision_tree_prediction = models.decision_tree_clf.predict(features)
-    neural_network_prediction = models.neural_network_clf.predict(features)
+    neural_network_prediction = models.neural_network_clf.predict(features, prediction='class')
 
     return decision_tree_prediction, neural_network_prediction
 
