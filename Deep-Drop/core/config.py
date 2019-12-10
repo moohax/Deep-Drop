@@ -11,16 +11,11 @@ payload_files = {
     'vba': os.path.join(basedir, 'payloads', 'template.vba')
 }
 
-# data
-data_files = {
-    'decisiontree': os.path.join(basedir, 'data','data_process_count.csv'),
-    'neuralnetwork': os.path.join(basedir, 'data', 'data_process_count.csv')
-}
-
 # trained models
 trained_models = {
-    'decisiontree': os.path.join(basedir, 'models', 'DecisionTree.pkl'),
-    'neuralnetwork': os.path.join(basedir, 'models', 'NeuralNetwork.h5')
+    'decisiontree': os.path.join(basedir, 'models', 'decisiontree.pkl'),
+    'neuralnetwork': os.path.join(basedir, 'models', 'neuralnetwork'),
+    'nn_scaler': os.path.join(basedir, 'models', 'minmax_scaler.bin')
 }
 
 # stagers

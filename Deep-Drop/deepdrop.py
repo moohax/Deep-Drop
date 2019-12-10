@@ -6,8 +6,9 @@ from flask import Flask
 from core import config
 from core import routing
 from core import logging
-from core import ddmodels
+from core import models
 from core import deepdrop
+
 
 def main(args):
     logging.print('''                   
@@ -22,7 +23,7 @@ def main(args):
     
     try: 
         # Load the models
-        ddmodels.load_models()
+        models.load_models()
         logging.warn('All models loaded')
 
         # Patch our payloads - will be moved.

